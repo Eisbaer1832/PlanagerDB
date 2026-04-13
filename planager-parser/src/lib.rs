@@ -24,6 +24,8 @@ pub fn parse_xml(file: io::Result<String>) -> Vec<Class> {
                     // get subjects
                     for subject_node in class.descendants().filter(|n| n.has_tag_name("UeNr")) {
                         let mut subject = Subject::default();
+
+                        subject.id = subject_node.text().unwrap().parse::<i32>().unwrap();
                         if let Some(subject_name_node) = subject_node.attributes().find(|n| n.name().eq("UeFa")) {
                             subject.name = String::from(subject_name_node.value());
                         }
@@ -32,10 +34,11 @@ pub fn parse_xml(file: io::Result<String>) -> Vec<Class> {
                             subject.teacher = String::from(teacher_node.value());
                         }
                         c.subjects.push(subject);
+
                     }
 
                     // get Timetable
-                    let mut lessons: Vec<Lesson> = vec![];
+                    let mut lessons: Vec<Lesson> =  Vec::new();
                     for lesson_node in class.descendants().filter(|n| n.has_tag_name("Std")) {
                         let mut lesson = Lesson::default();
                         if let Some(subject_name_node) = lesson_node.descendants().find(|n| n.has_tag_name("St")) {
@@ -43,19 +46,31 @@ pub fn parse_xml(file: io::Result<String>) -> Vec<Class> {
                         }
 
                         let mut subject = Subject::default();
+
+
+                        if let Some(teacher_node) = lesson_node.descendants().find(|n| n.has_tag_name("Le")) {
+                            subject.teacher = String::from(teacher_node.text().unwrap_or(""));
+                        }
+
                         if let Some(subject_name_node) = lesson_node.descendants().find(|n| n.has_tag_name("Fa")) {
                             subject.name = String::from(subject_name_node.text().unwrap_or(""));
 
                             if subject.name == "---" {
+                                // get id to mathc sub
+                                if let Some(subject_id_node) = lesson_node.descendants().find(|n| n.has_tag_name("Nr")) {
+                                    let l = c.subjects.iter().find(|l| l.id == subject_id_node.text().unwrap().parse().unwrap());
+
+                                    subject.name = l.unwrap().name.clone();
+                                    subject.teacher = l.unwrap().teacher.clone();
+
+
+                                }
                                 lesson.canceled = true
                             }else {
                                 lesson.canceled = false
                             }
                         }
 
-                        if let Some(teacher_node) = lesson_node.descendants().find(|n| n.has_tag_name("Le")) {
-                            subject.teacher = String::from(teacher_node.text().unwrap_or(""));
-                        }
                         lesson.subject = subject;
 
                         if let Some(teacher_node) = lesson_node.descendants().find(|n| n.has_tag_name("If")) {

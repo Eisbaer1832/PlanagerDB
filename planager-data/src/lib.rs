@@ -1,10 +1,12 @@
+
 mod schema;
 pub mod database;
 
 #[derive(Default)]
 pub struct Subject {
     pub name: String,
-    pub teacher: String
+    pub teacher: String,
+    pub id: i32,
 }
 
 

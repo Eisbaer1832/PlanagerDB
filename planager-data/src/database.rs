@@ -5,7 +5,7 @@ use diesel::dsl::{insert_or_ignore_into};
 use crate::{schema, Class, Lesson};
 use crate::schema::classes::dsl::classes;
 use crate::schema::lessons::dsl::lessons;
-use crate::schema::lessons::{note, postFix, subject, teacher, time, year};
+use crate::schema::lessons::{canceled, note, postFix, subject, teacher, time, year};
 
 pub fn establish_connection() -> SqliteConnection {
     dotenv().ok();
@@ -32,12 +32,14 @@ pub fn insert_class(class: &Class) {
 
 pub fn insert_lesson(lesson: &Lesson, class: &Class) {
     let conn = &mut establish_connection();
+    let canceled_sql = if lesson.canceled { 1 } else { 0 };
     insert_or_ignore_into(lessons)
         .values((
             subject.eq(&lesson.subject.name),
             teacher.eq(&lesson.subject.teacher),
             time.eq(&lesson.time),
             note.eq(&lesson.note),
+            canceled.eq(canceled_sql),
             year.eq(&class.year),
             postFix.eq(&class.post_fix)
         ))
