@@ -1,0 +1,9 @@
+[package]
+name = "planager-cli"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+planager-data = { version = "0.1.0", path = "../planager-data" }
+planager-parser = { version = "0.1.0", path = "../planager-parser" }
+ratatui = "0.30.0"

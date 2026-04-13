@@ -1,0 +1,8 @@
+[package]
+name = "planager-parser"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+planager-data = { version = "0.1.0", path = "../planager-data" }
+roxmltree = "0.21.1"
