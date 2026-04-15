@@ -10,6 +10,7 @@ diesel::table! {
 diesel::table! {
     lessons (subject, teacher, time) {
         subject -> Text,
+        subjectId -> Text,
         teacher -> Text,
         time -> Integer,
         note -> Nullable<Text>,

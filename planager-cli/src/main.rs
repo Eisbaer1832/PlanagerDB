@@ -3,6 +3,7 @@ use planager_data::Class;
 use planager_data::database::{insert_class, insert_lesson};
 use planager_parser::*;
 use clap::Parser;
+use planager_data::queries::fetch_subject_cancellation;
 
 /// Simple program to greet a person
 #[derive(Parser, Debug)]
@@ -26,7 +27,13 @@ fn main() {
     let file = fs::read_to_string(xml_file);
     let result = parse_xml(file);
 
-    populate_database(result, db)
+    populate_database(result, db);
+
+    let results = fetch_subject_cancellation();
+    
+    for res in results {
+        println!("{} {}", res.0, res.1)
+    } 
 }
 
 
