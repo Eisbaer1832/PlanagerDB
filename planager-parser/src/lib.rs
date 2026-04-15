@@ -56,7 +56,7 @@ pub fn parse_xml(file: io::Result<String>) -> Vec<Class> {
                             subject.name = String::from(subject_name_node.text().unwrap_or(""));
 
                             if subject.name == "---" {
-                                // get id to mathc sub
+                                // get id to match sub
                                 if let Some(subject_id_node) = lesson_node.descendants().find(|n| n.has_tag_name("Nr")) {
                                     let l = c.subjects.iter().find(|l| l.id == subject_id_node.text().unwrap().parse().unwrap());
 

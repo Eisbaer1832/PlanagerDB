@@ -13,6 +13,7 @@ CREATE TABLE lessons (
     canceled INTEGER,
     year INTEGER NOT NULL,
     postFix TEXT NOT NULL,
+    date TEXT,
     FOREIGN KEY (year, postFix) REFERENCES  classes(year, postFix),
     PRIMARY KEY (subject, teacher, time)
 );
