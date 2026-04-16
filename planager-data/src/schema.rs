@@ -1,14 +1,8 @@
 // @generated automatically by Diesel CLI.
 
 diesel::table! {
-    classes (year, postFix) {
-        year -> Integer,
-        postFix -> Nullable<Text>,
-    }
-}
-
-diesel::table! {
-    lessons (subject, teacher, time) {
+    lessons (rowid) {
+        rowid -> Integer,
         subject -> Text,
         subjectId -> Text,
         teacher -> Text,
@@ -17,7 +11,6 @@ diesel::table! {
         canceled -> Nullable<Integer>,
         year -> Integer,
         postFix -> Text,
+        date -> Nullable<Text>,
     }
 }
-
-diesel::allow_tables_to_appear_in_same_query!(classes, lessons,);

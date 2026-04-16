@@ -1,8 +1,8 @@
 use std::fs;
-use planager_data::Class;
-use planager_data::database::{insert_class, insert_lesson};
+use planager_data::database::{establish_connection};
 use planager_parser::*;
 use clap::Parser;
+use planager_data::insert::populate_database;
 use planager_data::queries::fetch_subject_cancellation;
 
 /// Simple program to greet a person
@@ -14,36 +14,28 @@ struct Arguments {
     xml_file: String,
 
     /// Number of times to greet
-    #[arg(short, long, default_value_t = String::from("database.db"))]
+    #[arg(short, long, default_value_t = String::from("../planager-data/database.db"))]
     database: String,
 }
 
 fn main() {
     println!("Welcome the planager cli!");
+
+
     let args = Arguments::parse();
-    let db = args.database;
+    let db_location = args.database;
     let xml_file = args.xml_file;
 
     let file = fs::read_to_string(xml_file);
     let result = parse_xml(file);
 
-    populate_database(result, db);
+    let conn = &mut establish_connection(db_location);
 
-    let results = fetch_subject_cancellation();
+    populate_database(result, conn);
+
+    let results = fetch_subject_cancellation(conn);
     
     for res in results {
         println!("{} {}", res.0, res.1)
     } 
-}
-
-
-fn populate_database(classes: Vec<Class>, db_location: String) {
-
-    for class in classes {
-        insert_class(&class);
-
-        for lesson in &class.lessons {
-            insert_lesson(lesson, &class);
-        }
-    }
 }

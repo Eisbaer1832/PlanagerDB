@@ -3,6 +3,7 @@ mod schema;
 pub mod database;
 pub mod queries;
 mod sanitize;
+pub mod insert;
 
 #[derive(Default)]
 pub struct Subject {

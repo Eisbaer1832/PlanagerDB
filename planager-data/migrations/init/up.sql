@@ -1,9 +1,3 @@
-CREATE TABLE classes (
-    year INTEGER NOT NULL,
-    postFix TEXT,
-    Primary Key (year, postFix)
-);
-
 CREATE TABLE lessons (
     subject TEXT NOT NULL ,
     subjectId TEXT NOT NULL ,
@@ -13,8 +7,6 @@ CREATE TABLE lessons (
     canceled INTEGER,
     year INTEGER NOT NULL,
     postFix TEXT NOT NULL,
-    date TEXT,
-    FOREIGN KEY (year, postFix) REFERENCES  classes(year, postFix),
-    PRIMARY KEY (subject, teacher, time)
+    date TEXT
 );
 
