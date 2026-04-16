@@ -1,4 +1,4 @@
-use crate::schema::lessons::{canceled, postFix, subjectId, year};
+use crate::schema::lessons::{canceled, postFix, date, subjectId, year};
 use crate::schema::lessons::note;
 use crate::schema::lessons::time;
 use crate::schema::lessons::teacher;
@@ -10,7 +10,7 @@ use crate::sanitize::sanitize_subject;
 use crate::{Class, Lesson};
 use crate::schema::lessons::dsl::lessons;
 
-pub fn insert_lesson(lesson: &Lesson, class: &Class, conn: &mut SqliteConnection) {
+pub fn insert_lesson(lesson: &Lesson, class: &Class, _date: String, conn: &mut SqliteConnection) {
     let canceled_sql = if lesson.canceled { 1 } else { 0 };
 
     insert_or_ignore_into(lessons)
@@ -22,15 +22,16 @@ pub fn insert_lesson(lesson: &Lesson, class: &Class, conn: &mut SqliteConnection
             note.eq(&lesson.note),
             canceled.eq(canceled_sql),
             year.eq(&class.year),
-            postFix.eq(&class.post_fix)
+            postFix.eq(&class.post_fix),
+            date.eq(&_date)
         ))
         .execute(conn).expect("TODO: panic message");
 }
-pub fn populate_database(cs: Vec<Class>, conn: &mut SqliteConnection) {
-
-    for class in cs {
+pub fn populate_database(cs: (String, Vec<Class>), conn: &mut SqliteConnection) {
+    let _date = cs.0;
+    for class in cs.1{
         for lesson in &class.lessons {
-            insert_lesson(lesson, &class, conn);
+            insert_lesson(lesson, &class, _date.clone(), conn);
         }
     }
 }

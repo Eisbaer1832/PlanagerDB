@@ -2,12 +2,12 @@ use std::io;
 use roxmltree::Document;
 use planager_data::*;
 
-pub fn parse_xml(file: io::Result<String>) -> Vec<Class> {
+pub fn parse_xml(file: io::Result<String>) -> (String, Vec<Class>) {
     let mut classes: Vec<Class> = vec![];
     let xml = file.unwrap();
     let string = &*xml;
     let doc = Document::parse(string);
-
+    let mut date: String = String::new();
     match doc {
         Ok(doc) => {
             for class in doc.descendants() {
@@ -88,12 +88,19 @@ pub fn parse_xml(file: io::Result<String>) -> Vec<Class> {
                 }
 
             }
+            let d = doc.descendants().find(|n| n.tag_name().name() == "zeitstempel")
+                .unwrap().text().unwrap()
+                .split(",").nth(0).unwrap();
+            date = String::from(d)
+
         }
-        _ => {}
+        _ => {
+        }
+
     }
 
 
-    classes
+    (date, classes)
 }
 
 

@@ -7,4 +7,5 @@ edition = "2024"
 clap = { version = "4.6.0", features = ["derive"] }
 planager-data = { version = "0.1.0", path = "../planager-data" }
 planager-parser = { version = "0.1.0", path = "../planager-parser" }
+diesel = { version = "2.3.7", features = ["sqlite", "returning_clauses_for_sqlite_3_35"] }
 ratatui = "0.30.0"
